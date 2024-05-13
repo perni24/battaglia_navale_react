@@ -1,0 +1,41 @@
+.cella{
+    width: 2vw;
+    height: 4vh;
+}
+
+.cellaSelezionata{
+    width: 2vw;
+    height: 4vh;
+    background-color: lightblue;
+}
+
+.campoContainer{
+    display: flex;
+    flex-direction: row;
+}
+
+
+.blockTab {
+    pointer-events: none;
+    filter: opacity(0.5);
+}
+
+
+.tableContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-right: 5vw;
+}
+
+.naveColpita{
+    background-color: green;
+    width: 2vw;
+    height: 4vh;
+}
+
+.naveMancata{
+    background-color: red;
+    width: 2vw;
+    height: 4vh;
+}
