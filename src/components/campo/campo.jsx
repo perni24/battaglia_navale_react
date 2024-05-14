@@ -6,6 +6,7 @@ function Campo({ state, setState, nNavi }) {
   const [arrNavi, setArrNavi] = useState([]);
   const [arrNavi2, setArrNavi2] = useState();
   const [celleColpite, setCelleColpite] = useState([]);
+  const [celleColpite2, setCelleColpite2] = useState([]);
 
   const posizionaNave = (buttonId) => {
     console.log(buttonId);
@@ -15,18 +16,6 @@ function Campo({ state, setState, nNavi }) {
       naviPlayer2();
     } else {
       setArrNavi([...arrNavi, buttonId]);
-    }
-  };
-
-  const attacco = (buttonId) => {
-    console.log(arrNavi2);
-    console.log(buttonId);
-    if (arrNavi2.includes(buttonId)) {
-        let obj = { id: buttonId, val: 1 };
-        setCelleColpite([...celleColpite, obj])
-    } else {
-        let obj = { id: buttonId, val: 0 };
-        setCelleColpite([...celleColpite, obj])
     }
   };
 
@@ -45,6 +34,34 @@ function Campo({ state, setState, nNavi }) {
     }
     setArrNavi2(arr);
   };
+
+  const attacco = (buttonId) => {
+    console.log(arrNavi2);
+    if (arrNavi2.includes(buttonId)) {
+        let obj = { id: buttonId, val: 1 };
+        setCelleColpite([...celleColpite, obj])
+        attaccoPlayer2()
+    } else {
+        let obj = { id: buttonId, val: 0 };
+        setCelleColpite([...celleColpite, obj])
+        attaccoPlayer2()
+    }
+  };
+
+  const attaccoPlayer2 = () => {
+    let controllo = false
+    let arr = celleColpite2
+    while(controllo == false){
+    let riga = Math.floor(Math.random() * 10) + 1;
+    let colonna = lettere[Math.floor(Math.random() * 10)];
+    let cella = `${colonna}${riga}`;
+    if(!arr.includes(cella)){
+      setCelleColpite2([...celleColpite2,cella])
+      controllo = true
+      arr.push(cella)
+      }
+    }
+  }
 
   return (
     <div className="campoContainer">
@@ -66,11 +83,10 @@ function Campo({ state, setState, nNavi }) {
                 {lettere.map((columnLetter, j) => (
                   <th key={`${i}-${j}`}>
                     <button
-                      // className='cella'
                       className={
                         arrNavi.includes(`${lettere[j]}${i + 1}`)
-                          ? "cellaSelezionata"
-                          : "cella"
+                          ? celleColpite2.includes(`${lettere[j]}${i + 1}`) ? "colpoNemico" : "cellaSelezionata"
+                          : celleColpite2.includes(`${lettere[j]}${i + 1}`) ? "colpoNemico" : "cella"
                       }
                       id={`${lettere[j]}${i + 1}`}
                       onClick={
