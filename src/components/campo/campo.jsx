@@ -7,6 +7,7 @@ function Campo({ state, setState, nNavi }) {
   const [arrNavi2, setArrNavi2] = useState();
   const [celleColpite, setCelleColpite] = useState([]);
   const [celleColpite2, setCelleColpite2] = useState([]);
+  const [punteggio, setPunteggio] = useState({p1: 0, p2: 0})
 
   const posizionaNave = (buttonId) => {
     console.log(buttonId);
@@ -35,15 +36,36 @@ function Campo({ state, setState, nNavi }) {
     setArrNavi2(arr);
   };
 
+  const checkPunto = (pn, buttonId) => {
+    if (pn === 1) {
+      if (arrNavi2.includes(buttonId)) {
+        setPunteggio((prevPunteggio) => ({
+          ...prevPunteggio,
+          p1: prevPunteggio.p1 + 1
+        }));
+      }
+    } else {
+      if (arrNavi.includes(buttonId)) {
+        setPunteggio((prevPunteggio) => ({
+          ...prevPunteggio,
+          p2: prevPunteggio.p2 + 1
+        }));
+      }
+    }
+  };
+  
+
   const attacco = (buttonId) => {
     console.log(arrNavi2);
     if (arrNavi2.includes(buttonId)) {
         let obj = { id: buttonId, val: 1 };
         setCelleColpite([...celleColpite, obj])
+        checkPunto(1,buttonId)
         attaccoPlayer2()
     } else {
         let obj = { id: buttonId, val: 0 };
         setCelleColpite([...celleColpite, obj])
+        checkPunto(1,buttonId)
         attaccoPlayer2()
     }
   };
@@ -58,6 +80,7 @@ function Campo({ state, setState, nNavi }) {
     if(!arr.includes(cella)){
       setCelleColpite2([...celleColpite2,cella])
       controllo = true
+      checkPunto(2,cella)
       arr.push(cella)
       }
     }
@@ -66,6 +89,7 @@ function Campo({ state, setState, nNavi }) {
   return (
     <div className="campoContainer">
       <div className="tableContainer">
+        <p>player 1 : {punteggio.p1}</p>
         <p>campo player</p>
         <table className={state == 2 ? "blockTab" : ""}>
           <thead>
@@ -105,6 +129,7 @@ function Campo({ state, setState, nNavi }) {
 
       {/* campo 2 */}
       <div className="tableContainer">
+        <p>player 2 : {punteggio.p2}</p>
         <p>campo attacco</p>
         <table>
           <thead>
