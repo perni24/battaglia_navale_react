@@ -1,25 +1,33 @@
-.startContainer{
+.start-screen {
+    width: 100vw;
+    height: 100vh;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
-    width: 50vw;
-    font-size: 2vw;
-    font-family: "Bebas Neue", sans-serif;
-}
-
-.startButton{
-    width: 12vw;
-    height: 6vh;
-    border-radius: 20px;
-    background-color: rgb(0, 68, 227);
-    font-size: large;
-    color: white;
-}
-
-.startButton:hover{
-    background-color: rgb(42, 101, 241);
-}
-
-.imgNave{
-    width: 35vw;
-}
+    background-image: url("/nave.png");
+    background-repeat: no-repeat; 
+    background-position: center;
+    background-size: 100vw;
+  }
+  
+  h1 {
+    color: #fff;
+    font-size: 3em;
+    text-align: center;
+  }
+  
+  button {
+    padding: 10px 20px;
+    font-size: 1.5em;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }

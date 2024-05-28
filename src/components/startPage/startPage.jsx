@@ -6,10 +6,9 @@ function StartPage({state,setState}) {
         console.log(state)
       };
     return (
-        <div className="startContainer">
-            <img className='imgNave' src="/nave.png" />
-            <h1>Navy Battle</h1>
-            <button className="startButton" id="startButton" onClick={buttonStart}>Start</button>
+        <div class="start-screen">
+        <h1>Battaglia Navale</h1>
+        <button onClick={()=>buttonStart()}>Inizia il gioco</button>
         </div>
     );
 }

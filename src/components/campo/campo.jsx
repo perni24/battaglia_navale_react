@@ -10,7 +10,6 @@ function Campo({ state, setState, nNavi }) {
   const [punteggio, setPunteggio] = useState({p1: 0, p2: 0})
 
   const posizionaNave = (buttonId) => {
-    console.log(buttonId);
     if (arrNavi.length == nNavi - 1) {
       setState((prevState) => prevState + 1);
       setArrNavi([...arrNavi, buttonId]);
@@ -36,37 +35,44 @@ function Campo({ state, setState, nNavi }) {
     setArrNavi2(arr);
   };
 
-  const checkPunto = (pn, buttonId) => {
-    if (pn === 1) {
-      if (arrNavi2.includes(buttonId)) {
-        setPunteggio((prevPunteggio) => ({
-          ...prevPunteggio,
-          p1: prevPunteggio.p1 + 1
-        }));
-      }
-    } else {
-      if (arrNavi.includes(buttonId)) {
+  const checkPunto = (buttonId) => {
+      if(arrNavi.includes(buttonId)) {
         setPunteggio((prevPunteggio) => ({
           ...prevPunteggio,
           p2: prevPunteggio.p2 + 1
         }));
       }
-    }
   };
+
+  const checkVittoria = () =>{
+    if(punteggio.p1 == 10){
+      setState((prevState) => prevState + 1);
+      return true
+    }
+    if(punteggio.p2 == 10){
+      setState((prevState) => prevState + 2);
+      return true 
+    }
+    return false
+  }
   
 
-  const attacco = (buttonId) => {
+  const attacco = async (buttonId) => {
     console.log(arrNavi2);
     if (arrNavi2.includes(buttonId)) {
         let obj = { id: buttonId, val: 1 };
         setCelleColpite([...celleColpite, obj])
-        checkPunto(1,buttonId)
-        attaccoPlayer2()
+        await setPunteggio((prevPunteggio) => ({
+          ...prevPunteggio,
+          p1: prevPunteggio.p1 + 1
+        }));
+        if (!checkVittoria()){
+          attaccoPlayer2()
+        }
     } else {
         let obj = { id: buttonId, val: 0 };
         setCelleColpite([...celleColpite, obj])
-        checkPunto(1,buttonId)
-        attaccoPlayer2()
+          attaccoPlayer2()
     }
   };
 
@@ -80,8 +86,9 @@ function Campo({ state, setState, nNavi }) {
     if(!arr.includes(cella)){
       setCelleColpite2([...celleColpite2,cella])
       controllo = true
-      checkPunto(2,cella)
+      checkPunto(cella)
       arr.push(cella)
+      checkVittoria()
       }
     }
   }
