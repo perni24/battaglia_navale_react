@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./campo.css";
 
 function Campo({ state, setState, nNavi }) {
@@ -7,7 +7,11 @@ function Campo({ state, setState, nNavi }) {
   const [arrNavi2, setArrNavi2] = useState();
   const [celleColpite, setCelleColpite] = useState([]);
   const [celleColpite2, setCelleColpite2] = useState([]);
-  const [punteggio, setPunteggio] = useState({p1: 0, p2: 0})
+  const [punteggio, setPunteggio] = useState({ p1: 0, p2: 0 });
+
+  useEffect(() => {
+    checkVittoria();
+  }, [punteggio]);
 
   const posizionaNave = (buttonId) => {
     if (arrNavi.length == nNavi - 1) {
@@ -36,62 +40,54 @@ function Campo({ state, setState, nNavi }) {
   };
 
   const checkPunto = (buttonId) => {
-      if(arrNavi.includes(buttonId)) {
-        setPunteggio((prevPunteggio) => ({
-          ...prevPunteggio,
-          p2: prevPunteggio.p2 + 1
-        }));
-      }
+    if (arrNavi.includes(buttonId)) {
+      setPunteggio((prevPunteggio) => ({
+        ...prevPunteggio,
+        p2: prevPunteggio.p2 + 1,
+      }));
+    }
   };
 
-  const checkVittoria = () =>{
-    if(punteggio.p1 == 10){
+  const checkVittoria = () => {
+    if (punteggio.p1 === 10) {
       setState((prevState) => prevState + 1);
-      return true
     }
-    if(punteggio.p2 == 10){
+    if (punteggio.p2 === 10) {
       setState((prevState) => prevState + 2);
-      return true 
     }
-    return false
-  }
-  
+  };
 
-  const attacco = async (buttonId) => {
+  const attacco = (buttonId) => {
     console.log(arrNavi2);
     if (arrNavi2.includes(buttonId)) {
-        let obj = { id: buttonId, val: 1 };
-        setCelleColpite([...celleColpite, obj])
-        await setPunteggio((prevPunteggio) => ({
-          ...prevPunteggio,
-          p1: prevPunteggio.p1 + 1
-        }));
-        if (!checkVittoria()){
-          attaccoPlayer2()
-        }
+      let obj = { id: buttonId, val: 1 };
+      setCelleColpite([...celleColpite, obj]);
+      setPunteggio((prevPunteggio) => ({
+        ...prevPunteggio,
+        p1: prevPunteggio.p1 + 1,
+      }));
+      attaccoPlayer2();
     } else {
-        let obj = { id: buttonId, val: 0 };
-        setCelleColpite([...celleColpite, obj])
-          attaccoPlayer2()
+      let obj = { id: buttonId, val: 0 };
+      setCelleColpite([...celleColpite, obj]);
+      attaccoPlayer2();
     }
   };
 
   const attaccoPlayer2 = () => {
-    let controllo = false
-    let arr = celleColpite2
-    while(controllo == false){
-    let riga = Math.floor(Math.random() * 10) + 1;
-    let colonna = lettere[Math.floor(Math.random() * 10)];
-    let cella = `${colonna}${riga}`;
-    if(!arr.includes(cella)){
-      setCelleColpite2([...celleColpite2,cella])
-      controllo = true
-      checkPunto(cella)
-      arr.push(cella)
-      checkVittoria()
+    let controllo = false;
+    let arr = celleColpite2;
+    while (controllo == false) {
+      let riga = Math.floor(Math.random() * 10) + 1;
+      let colonna = lettere[Math.floor(Math.random() * 10)];
+      let cella = `${colonna}${riga}`;
+      if (!arr.includes(cella)) {
+        setCelleColpite2([...celleColpite2, cella]);
+        controllo = true;
+        checkPunto(cella);
       }
     }
-  }
+  };
 
   return (
     <div className="campoContainer">
@@ -116,8 +112,12 @@ function Campo({ state, setState, nNavi }) {
                     <button
                       className={
                         arrNavi.includes(`${lettere[j]}${i + 1}`)
-                          ? celleColpite2.includes(`${lettere[j]}${i + 1}`) ? "colpoNemico" : "cellaSelezionata"
-                          : celleColpite2.includes(`${lettere[j]}${i + 1}`) ? "colpoNemico" : "cella"
+                          ? celleColpite2.includes(`${lettere[j]}${i + 1}`)
+                            ? "colpoNemico"
+                            : "cellaSelezionata"
+                          : celleColpite2.includes(`${lettere[j]}${i + 1}`)
+                          ? "colpoNemico"
+                          : "cella"
                       }
                       id={`${lettere[j]}${i + 1}`}
                       onClick={
@@ -155,12 +155,20 @@ function Campo({ state, setState, nNavi }) {
                   <th key={`${i}-${j}`}>
                     <button
                       className={
-                        celleColpite.some((item) => item.id === `${lettere[j]}${i + 1}` && item.val === 1)
+                        celleColpite.some(
+                          (item) =>
+                            item.id === `${lettere[j]}${i + 1}` &&
+                            item.val === 1
+                        )
                           ? "naveColpita"
-                          : celleColpite.some((item) => item.id === `${lettere[j]}${i + 1}` && item.val === 0) 
+                          : celleColpite.some(
+                              (item) =>
+                                item.id === `${lettere[j]}${i + 1}` &&
+                                item.val === 0
+                            )
                           ? "naveMancata"
                           : "cella"
-                      }                      
+                      }
                       id={`${lettere[j]}${i + 1}`}
                       onClick={
                         state == 2 ? (event) => attacco(event.target.id) : null

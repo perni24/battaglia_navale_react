@@ -6,7 +6,7 @@ function StartPage({state,setState}) {
         console.log(state)
       };
     return (
-        <div class="start-screen">
+        <div className="start-screen">
         <h1>Battaglia Navale</h1>
         <button onClick={()=>buttonStart()}>Inizia il gioco</button>
         </div>
