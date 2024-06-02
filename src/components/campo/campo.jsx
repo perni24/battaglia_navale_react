@@ -26,14 +26,58 @@ function Campo({ state, setState, nNavi }) {
   const naviPlayer2 = () => {
     let count = 0;
     let arr = [];
+    let colonna;
+    let riga = 0;
+    let cella = "";
     while (count < 10) {
-      let riga = Math.floor(Math.random() * 10) + 1;
-      let colonna = lettere[Math.floor(Math.random() * 10)];
-      let cella = `${colonna}${riga}`;
+      if (count % 2 === 0) {
+        riga = Math.floor(Math.random() * 10) + 1;
+        colonna = lettere[Math.floor(Math.random() * 10)];
+        cella = `${colonna}${riga}`;
 
-      if (!arr.includes(cella)) {
-        arr.push(cella);
-        count++;
+        if (!arr.includes(cella)) {
+          arr.push(cella);
+          count++;
+        }
+      } else {
+        let colonnaAd
+        let rigaAd
+        // su =  0 giu = 1 destra = 2 sinistra = 3
+        let direzione = Math.floor(Math.random() * 4);
+        switch (direzione) {
+          case 0:
+            if(riga != 1){
+              colonnaAd = colonna;
+              rigaAd = riga - 1;
+              cella = `${colonnaAd}${rigaAd}`;
+            }
+            break;
+          case 1:
+            if(riga != 10){
+              colonnaAd = colonna;
+              rigaAd = riga + 1;
+              cella = `${colonnaAd}${rigaAd}`;
+            }
+            break;
+          case 2:
+            if(colonna != "J"){
+              colonnaAd = lettere[lettere.indexOf(colonna) + 1];
+              rigaAd = riga;
+              cella = `${colonnaAd}${rigaAd}`;
+            }
+            break;
+          case 3:
+            if (colonna != "A"){
+              colonnaAd = lettere[lettere.indexOf(colonna) - 1];
+              rigaAd = riga;
+              cella = `${colonnaAd}${rigaAd}`;
+            }
+            break;
+        }
+        if (!arr.includes(cella)) {
+          arr.push(cella);
+          count++;
+        }
       }
     }
     setArrNavi2(arr);
