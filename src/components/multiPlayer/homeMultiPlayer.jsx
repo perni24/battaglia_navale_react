@@ -1,10 +1,10 @@
-function homeMultiPlayer(){
+function homeMultiPlayer() {
     return (
         <>
-        <button>genera stanza</button>
-        <button>unisciti</button>
+            <button >genera stanza</button>
+            <button>unisciti</button>
         </>
-    )
+    );
 }
 
-export default homeMultiPlayer
+export default homeMultiPlayer;
