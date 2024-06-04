@@ -1,11 +1,12 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { initializeApp } from 'firebase/app';
 import { firebaseConfig } from '../../firebaseConfig';
-import { getDatabase, ref, onValue } from "firebase/database";
+import { getDatabase, ref, onValue, update} from "firebase/database";
 
 function homeMultiPlayer() {
-
-    var roomData = {id: 1}
+    const [namePlayer, setNamePlayer] = useState("");
+    const [getDati, setGetDati] = useState(null);
+    var id = 10
 
     // Effettua la richiesta dei dati al database e visualizzali nella console
     const requestAllData = () => {
@@ -19,31 +20,44 @@ function homeMultiPlayer() {
         onValue(databaseRef, (snapshot) => {
             const data = snapshot.val();
             console.log("Tutti i dati dal database:", data);
+            setGetDati(data)
         });
     };
 
+    // // Chiamare la funzione per richiedere i dati quando il componente viene montato
+    // useEffect(() => {
+    //     requestAllData();
+    // }, []);
+
     const handleGenerateRoomClick = () => {
-        const firebaseApp = initializeApp(firebaseConfig); // Inizializza l'app Firebase
-
-        const databaseRef = ref(getDatabase(firebaseApp)); // Ottieni un riferimento al nodo del database in cui desideri salvare i dati
-
-        // Salva i dati della stanza nel database
-        set(databaseRef, roomData)
-            .then(() => {
-                console.log("Dati della stanza salvati con successo nel database.");
-            })
-            .catch((error) => {
-                console.error("Errore durante il salvataggio dei dati della stanza nel database:", error);
-            });
-    };
-   /* // Chiamare la funzione per richiedere i dati quando il componente viene montato
-    useEffect(() => {
         requestAllData();
-    }, []);*/
+        console.log(getDati)
+
+        const firebaseApp = initializeApp(firebaseConfig); // Inizializza l'app Firebase
+    
+        const databaseRef = getDatabase(firebaseApp); // Ottieni un riferimento al nodo del database in cui desideri salvare i dati
+
+        // Aggiorna solo i dati specifici all'interno di 'stanze' nel database
+        update(ref(databaseRef, 'stanze/'+id), {
+            player1: "", player2: "" , arr1:[1,2], arr2:[3,4]
+        })
+        .then(() => {
+            console.log("Dati della stanza aggiornati con successo nel database.");
+        })
+        .catch((error) => {
+            console.error("Errore durante l'aggiornamento dei dati della stanza nel database:", error);
+        });
+    };
+    
+
+    const trovaId = () =>{
+
+    }
 
     return (
         <>
-            <button onClick={requestAllData}>genera stanza</button>
+            <input type="text" />
+            <button onClick={handleGenerateRoomClick}>genera stanza</button>
             <button>unisciti</button>
         </>
     );
