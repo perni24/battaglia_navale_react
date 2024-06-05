@@ -4,7 +4,6 @@ function StartPage({ state, setState , modalita, setModalita}) {
   const buttonSingle = () => {
     setState((prevState) => prevState + 1);
     setModalita((prevState) => prevState + 1);
-    console.log(state);
   };
 
   const buttonMulti = () => {
