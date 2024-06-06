@@ -15,9 +15,9 @@ function StartPage({ state, setState , modalita, setModalita}) {
   return (
     <div className="start-screen">
       <h1>Battaglia Navale</h1>
-      <div>
-        <button onClick={() => buttonSingle()}>Single Player</button>
-        <button onClick={() => buttonMulti()}>Multi Player</button>
+      <div className="">
+        <button onClick={() => buttonSingle()} style={{ marginRight: "1vw" }} className="startButton">Single Player</button>
+        <button onClick={() => buttonMulti()} className="startButton">Multi Player</button>
       </div>
     </div>
   );

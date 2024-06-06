@@ -12,22 +12,10 @@
   }
   
   h1 {
-    color: #fff;
-    font-size: 3em;
+    color: #000000;
+    font-size: 5em;
     text-align: center;
-  }
-  
-  button {
-    padding: 10px 20px;
-    font-size: 1.5em;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
+    border: 5px solid black;
+    /* background-image: linear-gradient(rgb(13, 0, 255), rgb(0, 255, 238)); */
+    background-color: white;
   }

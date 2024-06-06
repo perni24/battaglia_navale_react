@@ -6,5 +6,25 @@ body{
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background-image: linear-gradient(rgb(13, 0, 255), rgb(0, 255, 238));
+  background-image: linear-gradient(rgb(2, 106, 252), rgb(130, 255, 247));
+}
+
+button{
+    padding: 10px 20px;
+    font-size: 1.5em;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border: 2px solid black;
+}
+
+Button:hover {
+  background-color: #0056b3;
+}
+
+table{
+  font-size: 1.2em;
 }

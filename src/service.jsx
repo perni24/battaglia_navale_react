@@ -5,7 +5,7 @@ import { getDatabase, ref, onValue, update } from "firebase/database";
 //-------------------------------------------------------------------------------------------------------------------------
 
 // Effettua la richiesta dei dati al database e visualizzali nella console
-export const requestAllData = () => {
+const requestAllData = () => {
     return new Promise((resolve, reject) => {
       // Inizializza l'app Firebase
       const firebaseApp = initializeApp(firebaseConfig);
@@ -38,18 +38,15 @@ export async function fetchData() {
 
 //-------------------------------------------------------------------------------------------------------------------------
 
-export const handleGenerateRoomClick = () => {
+export const insertStanza = (stanza,player) => {
     
     const firebaseApp = initializeApp(firebaseConfig); // Inizializza l'app Firebase
 
     const databaseRef = getDatabase(firebaseApp); // Ottieni un riferimento al nodo del database in cui desideri salvare i dati
 
     // Aggiorna solo i dati specifici all'interno di 'stanze' nel database
-    update(ref(databaseRef, "stanze/" + id), {
-      player1: "",
-      player2: "",
-      arr1: [1, 2],
-      arr2: [3, 4],
+    update(ref(databaseRef, "stanze/" + stanza), {
+      player1: player,
     })
       .then(() => {
         console.log("Dati della stanza aggiornati con successo nel database.");
@@ -61,4 +58,64 @@ export const handleGenerateRoomClick = () => {
         );
       });
       
+  };
+
+
+  export const joinStanza = (stanza,player) => {
+    
+    const firebaseApp = initializeApp(firebaseConfig); // Inizializza l'app Firebase
+
+    const databaseRef = getDatabase(firebaseApp); // Ottieni un riferimento al nodo del database in cui desideri salvare i dati
+
+    // Aggiorna solo i dati specifici all'interno di 'stanze' nel database
+    update(ref(databaseRef, "stanze/" + stanza), {
+      player2: player,
+    })
+      .then(() => {
+        console.log("Dati della stanza aggiornati con successo nel database.");
+      })
+      .catch((error) => {
+        console.error(
+          "Errore durante l'aggiornamento dei dati della stanza nel database:",
+          error
+        );
+      });
+      
+  };
+
+  export const insertNavi = (stanza,arrNavi,posizione) => {
+    
+    const firebaseApp = initializeApp(firebaseConfig); // Inizializza l'app Firebase
+
+    const databaseRef = getDatabase(firebaseApp); // Ottieni un riferimento al nodo del database in cui desideri salvare i dati
+
+    // Aggiorna solo i dati specifici all'interno di 'stanze' nel database
+    if(posizione === 1){
+    update(ref(databaseRef, "stanze/" + stanza), {
+      naviplayer1: arrNavi,
+    })
+      .then(() => {
+        console.log("Dati della stanza aggiornati con successo nel database.");
+      })
+      .catch((error) => {
+        console.error(
+          "Errore durante l'aggiornamento dei dati della stanza nel database:",
+          error
+        );
+      });
+    }
+    if(posizione === 2){
+      update(ref(databaseRef, "stanze/" + stanza), {
+        naviplayer2: arrNavi,
+      })
+        .then(() => {
+          console.log("Dati della stanza aggiornati con successo nel database.");
+        })
+        .catch((error) => {
+          console.error(
+            "Errore durante l'aggiornamento dei dati della stanza nel database:",
+            error
+          );
+        });
+      }
   };

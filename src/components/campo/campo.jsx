@@ -136,8 +136,8 @@ function Campo({ state, setState, nNavi }) {
   return (
     <div className="campoContainer">
       <div className="tableContainer">
-        <p>player 1 : {punteggio.p1}</p>
-        <p>campo player</p>
+        <p className="testoCampo">player 1 : {punteggio.p1}</p>
+        <p className="testoCampo">campo player</p>
         <table className={state == 2 ? "blockTab" : ""}>
           <thead>
             <tr>
@@ -180,8 +180,8 @@ function Campo({ state, setState, nNavi }) {
 
       {/* campo 2 */}
       <div className="tableContainer">
-        <p>player 2 : {punteggio.p2}</p>
-        <p>campo attacco</p>
+        <p className="testoCampo">player 2 : {punteggio.p2}</p>
+        <p className="testoCampo">campo attacco</p>
         <table>
           <thead>
             <tr>

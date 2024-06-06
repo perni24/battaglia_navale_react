@@ -37,7 +37,7 @@
 }
 
 .naveMancata{
-    background-color: red;
+    background-color: rgb(146, 0, 0);
     width: 2vw;
     height: 4vh;
     pointer-events: none;
@@ -48,4 +48,9 @@
     width: 2vw;
     height: 4vh;
     pointer-events: none;
+}
+
+.testoCampo{
+    font-size: 1.2em;
+    font-weight: bold;
 }

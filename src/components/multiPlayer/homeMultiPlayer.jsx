@@ -1,8 +1,8 @@
 import { useState } from "react";
 import "./homeMultiPlayer.css";
-import { fetchData } from "../../service";
+import { fetchData,insertStanza,joinStanza,insertNavi } from "../../service";
 
-function homeMultiPlayer({ state, nNavi }) {
+function homeMultiPlayer({ state, nNavi, setState }) {
   const lettere = "ABCDEFGHIJ".split("");
   const [arrNavi, setArrNavi] = useState([]);
   const [celleColpite, setCelleColpite] = useState([]);
@@ -11,25 +11,52 @@ function homeMultiPlayer({ state, nNavi }) {
   const [inputValues, setInputValues] = useState({
     playerName: "",
     roomName: "",
+    posizione: 0,
   }); // Stato per entrambi gli input
   const [statoCampo, setStatoCampo] = useState(0);
 
   const posizionaNave = (buttonId) => {
+    let arrtemp = arrNavi
     if (arrNavi.length == nNavi - 1) {
       setState((prevState) => prevState + 1);
       setArrNavi([...arrNavi, buttonId]);
+      arrtemp.push(buttonId)
+      insertNavi(inputValues.roomName,arrtemp,inputValues.posizione)
     } else {
       setArrNavi([...arrNavi, buttonId]);
+      arrtemp.push(buttonId)
+      insertNavi(inputValues.roomName,arrtemp,inputValues.posizione)
     }
   };
 
 
-  const generaStanza = async() =>{
+  const roomAction = async(scelta) =>{
     var dati = await fetchData()
-  
+    var chiavi = Object.keys(dati.data.stanze)
+    if(scelta == 1){
+    if(chiavi.includes(inputValues.roomName)){
+      alert("attenzione!! stanza già utilizzata")
+    }else{
+      insertStanza(inputValues.roomName,inputValues.playerName)
+      setStatoCampo(1)
+      setInputValues((prevState) => ({
+        ...prevState,
+        posizione: 1,
+      }))
+    }
+  }else{
+    if(chiavi.includes(inputValues.roomName)){
+      joinStanza(inputValues.roomName,inputValues.playerName)
+      setStatoCampo(1)
+      setInputValues((prevState) => ({
+        ...prevState,
+        posizione: 2,
+      }))
+    }else{
+      alert("attenzione!! stanza non trovata")
+    }
+  }
     
-
-    console.log(Object.keys(dati.data.stanze))
   }
 
   return (
@@ -62,17 +89,18 @@ function homeMultiPlayer({ state, nNavi }) {
               }
             />
           </div>
-          <div className="buttonContainer">
+          <div className="buttonContainer" >
             <button
               // onClick={() => fetchData().then((ris) => console.log(ris.data))}
-              onClick={() => generaStanza()}
+              onClick={() => roomAction(1)}
               disabled={inputValues.playerName === "" || inputValues.roomName === ""}
               className={inputValues.playerName === "" || inputValues.roomName === "" ? "disabledButton" : ""}
+              style={{ marginRight: "1vw" }}
             >
               genera stanza
             </button>
             <button
-              onClick={() => setStatoCampo(1)}
+              onClick={() => roomAction(2)}
               disabled={inputValues.playerName === "" || inputValues.roomName === ""}
               className={inputValues.playerName === "" || inputValues.roomName === "" ? "disabledButton" : ""}
             >
@@ -84,8 +112,8 @@ function homeMultiPlayer({ state, nNavi }) {
         <>
           <div className="campoContainer">
             <div className="tableContainer">
-              <p>player 1 : {punteggio.p1}</p>
-              <p>campo player</p>
+              <p className="testoCampo">player 1 : {punteggio.p1}</p>
+              <p className="testoCampo">campo player</p>
               <table className={state == 2 ? "blockTab" : ""}>
                 <thead>
                   <tr>
@@ -132,8 +160,8 @@ function homeMultiPlayer({ state, nNavi }) {
 
             {/* campo 2 */}
             <div className="tableContainer">
-              <p>player 2 : {punteggio.p2}</p>
-              <p>campo attacco</p>
+              <p className="testoCampo">player 2 : {punteggio.p2}</p>
+              <p className="testoCampo">campo attacco</p>
               <table>
                 <thead>
                   <tr>

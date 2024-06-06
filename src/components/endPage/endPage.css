@@ -1,0 +1,7 @@
+.risultato{
+    border: 5px solid black;
+    font-size: 60px;
+    font-weight: bold;
+    background-color: white;
+    border-radius: 10px;
+}
