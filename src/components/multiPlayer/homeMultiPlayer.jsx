@@ -23,6 +23,15 @@ function homeMultiPlayer({ state, nNavi }) {
     }
   };
 
+
+  const generaStanza = async() =>{
+    var dati = await fetchData()
+  
+    
+
+    console.log(Object.keys(dati.data.stanze))
+  }
+
   return (
     <>
       {statoCampo === 0 ? (
@@ -56,7 +65,7 @@ function homeMultiPlayer({ state, nNavi }) {
           <div className="buttonContainer">
             <button
               // onClick={() => fetchData().then((ris) => console.log(ris.data))}
-              onClick={() => console.log()}
+              onClick={() => generaStanza()}
               disabled={inputValues.playerName === "" || inputValues.roomName === ""}
               className={inputValues.playerName === "" || inputValues.roomName === "" ? "disabledButton" : ""}
             >
