@@ -1,100 +1,178 @@
-import { useEffect, useState } from "react";
-import { initializeApp } from "firebase/app";
-import { firebaseConfig } from "../../firebaseConfig";
-import { getDatabase, ref, onValue, update } from "firebase/database";
+import { useState } from "react";
 import "./homeMultiPlayer.css";
+import { fetchData } from "../../service";
 
-function homeMultiPlayer() {
-    const [inputValues, setInputValues] = useState({
-        playerName: "",
-        inputValue2: ""
-      }); // Stato per entrambi gli input
-    const [getDati, setGetDati] = useState()
+function homeMultiPlayer({ state, nNavi }) {
+  const lettere = "ABCDEFGHIJ".split("");
+  const [arrNavi, setArrNavi] = useState([]);
+  const [celleColpite, setCelleColpite] = useState([]);
+  const [celleColpite2, setCelleColpite2] = useState([]);
+  const [punteggio, setPunteggio] = useState({ p1: 0, p2: 0 });
+  const [inputValues, setInputValues] = useState({
+    playerName: "",
+    roomName: "",
+  }); // Stato per entrambi gli input
+  const [statoCampo, setStatoCampo] = useState(0);
 
-
-  // Effettua la richiesta dei dati al database e visualizzali nella console
-  const requestAllData = () => {
-    // Inizializza l'app Firebase
-    const firebaseApp = initializeApp(firebaseConfig);
-
-    // Ottieni un riferimento al nodo nel database da cui desideri recuperare i dati
-    const databaseRef = ref(getDatabase(firebaseApp));
-
-    // Ascolta gli eventi "value" sul nodo del database e recupera i dati
-    onValue(databaseRef, (snapshot) => {
-      const data = snapshot.val();
-      console.log("Tutti i dati dal database:", data);
-      setGetDati(data);
-    });
-  };
-
-  // Chiamare la funzione per richiedere i dati quando il componente viene montato
-  useEffect(() => {
-    requestAllData();
-  }, []);
-
-  const handleGenerateRoomClick = () => {
-console.log(inputValues.playerName+ " "+inputValues.inputValue2)
-    /*
-    const firebaseApp = initializeApp(firebaseConfig); // Inizializza l'app Firebase
-
-    const databaseRef = getDatabase(firebaseApp); // Ottieni un riferimento al nodo del database in cui desideri salvare i dati
-
-    // Aggiorna solo i dati specifici all'interno di 'stanze' nel database
-    update(ref(databaseRef, "stanze/" + id), {
-      player1: "",
-      player2: "",
-      arr1: [1, 2],
-      arr2: [3, 4],
-    })
-      .then(() => {
-        console.log("Dati della stanza aggiornati con successo nel database.");
-      })
-      .catch((error) => {
-        console.error(
-          "Errore durante l'aggiornamento dei dati della stanza nel database:",
-          error
-        );
-      });
-      */
-  };
-
-  const trovaId = () => {
-    var keys = Object.keys(getDati.stanze);
-    var numericKeys = keys.map((key) => Number(key));
-    var maxId = Math.max(...numericKeys);
-
-    return maxId;
+  const posizionaNave = (buttonId) => {
+    if (arrNavi.length == nNavi - 1) {
+      setState((prevState) => prevState + 1);
+      setArrNavi([...arrNavi, buttonId]);
+    } else {
+      setArrNavi([...arrNavi, buttonId]);
+    }
   };
 
   return (
     <>
-      <div className="inputContainer">
-        <label>Player Name</label>
-        <input 
-        type="text"
-        name="playerName"
-        value={inputValues.playerName}
-        onChange={(e) => setInputValues(prevState => ({
-            ...prevState,
-            playerName: e.target.value
-        }))} 
-        />
-        <label>Room Name</label>
-        <input 
-        type="text"
-        name="inputValue2"
-        value={inputValues.inputValue2}
-        onChange={(e) => setInputValues(prevState => ({
-            ...prevState,
-            inputValue2: e.target.value
-        }))}
-        />
-      </div>
-      <div className="buttonContainer">
-        <button onClick={handleGenerateRoomClick}>genera stanza</button>
-        <button>unisciti</button>
-      </div>
+      {statoCampo === 0 ? (
+        <>
+          <div className="inputContainer">
+            <label>Player Name</label>
+            <input
+              type="text"
+              name="playerName"
+              value={inputValues.playerName}
+              onChange={(e) =>
+                setInputValues((prevState) => ({
+                  ...prevState,
+                  playerName: e.target.value,
+                }))
+              }
+            />
+            <label>Room Name</label>
+            <input
+              type="text"
+              name="roomName"
+              value={inputValues.roomName}
+              onChange={(e) =>
+                setInputValues((prevState) => ({
+                  ...prevState,
+                  roomName: e.target.value,
+                }))
+              }
+            />
+          </div>
+          <div className="buttonContainer">
+            <button
+              // onClick={() => fetchData().then((ris) => console.log(ris.data))}
+              onClick={() => console.log()}
+              disabled={inputValues.playerName === "" || inputValues.roomName === ""}
+              className={inputValues.playerName === "" || inputValues.roomName === "" ? "disabledButton" : ""}
+            >
+              genera stanza
+            </button>
+            <button
+              onClick={() => setStatoCampo(1)}
+              disabled={inputValues.playerName === "" || inputValues.roomName === ""}
+              className={inputValues.playerName === "" || inputValues.roomName === "" ? "disabledButton" : ""}
+            >
+              unisciti
+            </button>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="campoContainer">
+            <div className="tableContainer">
+              <p>player 1 : {punteggio.p1}</p>
+              <p>campo player</p>
+              <table className={state == 2 ? "blockTab" : ""}>
+                <thead>
+                  <tr>
+                    <th> </th>
+                    {lettere.map((item) => (
+                      <th key={item}>{item}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {lettere.map((rowLetter, i) => (
+                    <tr key={i}>
+                      <th>{i + 1}</th>
+                      {lettere.map((columnLetter, j) => (
+                        <th key={`${i}-${j}`}>
+                          <button
+                            className={
+                              arrNavi.includes(`${lettere[j]}${i + 1}`)
+                                ? celleColpite2.includes(
+                                    `${lettere[j]}${i + 1}`
+                                  )
+                                  ? "colpoNemico"
+                                  : "cellaSelezionata"
+                                : celleColpite2.includes(
+                                    `${lettere[j]}${i + 1}`
+                                  )
+                                ? "colpoNemico"
+                                : "cella"
+                            }
+                            id={`${lettere[j]}${i + 1}`}
+                            onClick={
+                              state == 1
+                                ? (event) => posizionaNave(event.target.id)
+                                : null
+                            }
+                          ></button>
+                        </th>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* campo 2 */}
+            <div className="tableContainer">
+              <p>player 2 : {punteggio.p2}</p>
+              <p>campo attacco</p>
+              <table>
+                <thead>
+                  <tr>
+                    <th> </th>
+                    {lettere.map((item) => (
+                      <th key={item}>{item}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {lettere.map((rowLetter, i) => (
+                    <tr key={i}>
+                      <th>{i + 1}</th>
+                      {lettere.map((columnLetter, j) => (
+                        <th key={`${i}-${j}`}>
+                          <button
+                            className={
+                              celleColpite.some(
+                                (item) =>
+                                  item.id === `${lettere[j]}${i + 1}` &&
+                                  item.val === 1
+                              )
+                                ? "naveColpita"
+                                : celleColpite.some(
+                                    (item) =>
+                                      item.id === `${lettere[j]}${i + 1}` &&
+                                      item.val === 0
+                                  )
+                                ? "naveMancata"
+                                : "cella"
+                            }
+                            id={`${lettere[j]}${i + 1}`}
+                            onClick={
+                              state == 2
+                                ? (event) => attacco(event.target.id)
+                                : null
+                            }
+                          ></button>
+                        </th>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </>
+      )}
     </>
   );
 }
